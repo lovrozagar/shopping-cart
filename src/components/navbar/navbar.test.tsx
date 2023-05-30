@@ -26,7 +26,7 @@ describe('Navbar', () => {
 
   test('renders buttons correctly', () => {
     render(
-      <Router>
+      <Router>  
         <Navbar />
       </Router>
     )
