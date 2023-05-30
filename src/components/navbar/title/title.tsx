@@ -12,9 +12,12 @@ function Title({ mode, isActiveLink = false }: TitleProps) {
   const textH1 = 'px-1 text-3xl font-bold italic'
 
   return (
-    <div>
+    <div className='overflow-hidden rounded-xl p-2'>
       {isActiveLink ? (
-        <Link to='/' className='flex items-center'>
+        <Link
+          to='/'
+          className='flex items-center rounded ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+        >
           <h1 className={textH1}>
             <span
               className='text-constant-red'

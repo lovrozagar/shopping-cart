@@ -13,10 +13,11 @@ import { Heart, ShoppingBag, Menu, Home, Car } from 'lucide-react'
 
 import Title from '../title/title'
 import SettingsDropdown from '../settings-dropdown/settings-dropdown'
-import useMode from '@/hooks/useMode'
+import { useContext } from 'react'
+import { ModeContext } from '@/App'
 
 function SideMenu() {
-  const { mode, modeToggle } = useMode()
+  const { mode, modeToggle } = useContext(ModeContext)
 
   return (
     <Sheet>
