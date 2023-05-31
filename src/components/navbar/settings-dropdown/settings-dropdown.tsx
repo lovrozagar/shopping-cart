@@ -26,11 +26,10 @@ function SettingsDropdown({
         <Button
           asChild
           type='button'
-          data-testid='settings-button'
           variant='ghost'
           className={`${isInMenu ? 'flex w-full justify-start' : ''}`}
         >
-          <PopoverTrigger>
+          <PopoverTrigger className='gap-5' data-testid='settings-trigger'>
             <Settings className='w-5' /> {isInMenu ? 'Settings' : ''}
           </PopoverTrigger>
         </Button>
@@ -41,16 +40,16 @@ function SettingsDropdown({
               checked={mode}
               onCheckedChange={modeToggle}
               id='dark-mode'
-              data-testid='mode-switch'
-              className='ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+              data-testid='first-switch'
+              className='ring-offset-background focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
             />
           </div>
           <Separator />
           <div className='flex w-auto items-center justify-between gap-x-6 gap-y-4 px-3 py-2'>
             <Label>Local storage</Label>
             <Switch
-              disabled
-              className='ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+              data-testid='second-switch'
+              className='ring-offset-background focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
             />
           </div>
         </PopoverContent>
