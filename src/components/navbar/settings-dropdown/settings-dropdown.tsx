@@ -1,14 +1,13 @@
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/shadcnUI/dropdown-menu'
 import { Button } from '@/components/shadcnUI/button'
 import { Label } from '@/components/shadcnUI/label'
 import { Switch } from '@/components/shadcnUI/switch'
 import { Settings } from 'lucide-react'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/shadcnUI/popover'
+import { Separator } from '@/components/shadcnUI/separator'
 
 type SettingsDropdownProps = {
   mode: boolean
@@ -23,7 +22,7 @@ function SettingsDropdown({
 }: SettingsDropdownProps) {
   return (
     <div className='flex items-center'>
-      <DropdownMenu>
+      <Popover>
         <Button
           asChild
           type='button'
@@ -31,36 +30,31 @@ function SettingsDropdown({
           variant='ghost'
           className={`${isInMenu ? 'flex w-full justify-start' : ''}`}
         >
-          <DropdownMenuTrigger className='flex gap-4'>
+          <PopoverTrigger>
             <Settings className='w-5' /> {isInMenu ? 'Settings' : ''}
-          </DropdownMenuTrigger>
+          </PopoverTrigger>
         </Button>
-        <DropdownMenuContent className='grid gap-y-2 px-4 py-2'>
-          <DropdownMenuLabel className='px-0'>Settings</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <div>
-            <div className='flex items-center justify-between space-x-4 py-2'>
-              <Label htmlFor='dark-mode'>Dark mode</Label>
-              <Switch
-                checked={mode}
-                onCheckedChange={modeToggle}
-                id='dark-mode'
-                data-testid='mode-switch'
-              />
-            </div>
+        <PopoverContent className='grid w-auto gap-2'>
+          <div className='flex w-auto items-center gap-x-10 gap-y-4 px-3 py-2'>
+            <Label htmlFor='dark-mode'>Dark mode</Label>
+            <Switch
+              checked={mode}
+              onCheckedChange={modeToggle}
+              id='dark-mode'
+              data-testid='mode-switch'
+              className='ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+            />
           </div>
-          <div>
-            <div className='flex items-center justify-between space-x-4 py-2'>
-              <Label htmlFor='local-storage'>Local storage</Label>
-              <Switch
-                disabled
-                id='local-storage'
-                data-testid='storage-switch'
-              />
-            </div>
+          <Separator />
+          <div className='flex w-auto items-center justify-between gap-x-6 gap-y-4 px-3 py-2'>
+            <Label>Local storage</Label>
+            <Switch
+              disabled
+              className='ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+            />
           </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }
