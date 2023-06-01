@@ -3,6 +3,21 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import user from '@testing-library/user-event'
 import SideMenu from './side-menu'
 
+global.ResizeObserver = require('resize-observer-polyfill')
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+})
+
 describe('side menu', () => {
   test('trigger renders correctly', () => {
     render(
@@ -89,7 +104,7 @@ describe('side menu', () => {
     const triggerElement = screen.getByTestId('side-menu-button')
     await user.click(triggerElement)
 
-    const homeLinkElement = screen.getByRole('button', { name: /home/i })
+    const homeLinkElement = screen.getByRole('link', { name: /home/i })
     await user.click(homeLinkElement)
 
     const homePageHeading = await screen.findByRole('heading', {
@@ -119,8 +134,8 @@ describe('side menu', () => {
     const triggerElement = screen.getByTestId('side-menu-button')
     await user.click(triggerElement)
 
-    const homeLinkElement = screen.getByRole('button', { name: /cars/i })
-    await user.click(homeLinkElement)
+    const carNavigationButton = screen.getByRole('button', { name: /cars/i })
+    await user.click(carNavigationButton)
 
     const homePageHeading = await screen.findByRole('heading', {
       name: /cars are awesome/i,
@@ -149,7 +164,7 @@ describe('side menu', () => {
     const triggerElement = screen.getByTestId('side-menu-button')
     await user.click(triggerElement)
 
-    const homeLinkElement = screen.getByRole('button', { name: /saved/i })
+    const homeLinkElement = screen.getByRole('link', { name: /saved/i })
     await user.click(homeLinkElement)
 
     const homePageHeading = await screen.findByRole('heading', {
@@ -179,7 +194,7 @@ describe('side menu', () => {
     const triggerElement = screen.getByTestId('side-menu-button')
     await user.click(triggerElement)
 
-    const homeLinkElement = screen.getByRole('button', { name: /cart/i })
+    const homeLinkElement = screen.getByRole('link', { name: /cart/i })
     await user.click(homeLinkElement)
 
     const homePageHeading = await screen.findByRole('heading', {

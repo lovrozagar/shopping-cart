@@ -24,21 +24,23 @@ import SettingsDropdown from '@/components/navbar/settings-dropdown/settings-dro
 import ListItem from '@/components/navbar/navigation-menu/navigation-menu-list-item'
 import categories from '@/components/navbar/navigation-menu/car-categories'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useContext, Fragment } from 'react'
 import { ModeContext } from '@/App'
 import {
   handleMenuRemoveOnClick,
   handleLinkClickMenuClose,
+  isTouchScreen,
 } from '@/components/navbar/navigation-menu/car-item-handlers'
 
 function SideMenu() {
   const { mode, modeToggle } = useContext(ModeContext)
   const navigate = useNavigate()
 
-  const handleAllCarsNavigationOnClick = (location: string) => {
+  const handleAllCarsNavigationOnClick = (isTouchScreen: () => boolean) => {
+    if (isTouchScreen()) return
     handleLinkClickMenuClose()
-    navigate(`/shopping-cart/${location}`)
+    navigate(`/shopping-cart/cars`)
   }
 
   return (
@@ -61,11 +63,14 @@ function SideMenu() {
         </SheetHeader>
         <div className='grid gap-2'>
           <Button
+            asChild
             variant='ghost'
             className='flex justify-start gap-4'
-            onMouseDown={() => handleAllCarsNavigationOnClick('')}
+            onClick={handleLinkClickMenuClose}
           >
-            <Home /> Home
+            <Link to='/shopping-cart/'>
+              <Home /> Home
+            </Link>
           </Button>
           <Menu className='grid w-full justify-stretch'>
             <NavigationMenuList className='grid w-full justify-stretch'>
@@ -73,11 +78,13 @@ function SideMenu() {
                 <NavigationMenuTrigger
                   className='flex w-full justify-start bg-transparent ring-offset-background focus:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
                   onClick={handleMenuRemoveOnClick}
-                  onMouseDown={() => handleAllCarsNavigationOnClick('cars')}
+                  onMouseDown={() =>
+                    handleAllCarsNavigationOnClick(isTouchScreen)
+                  }
                 >
                   <>
                     <Car />
-                    <p className='ml-4'>Cars</p>
+                    <span className='ml-4'>Cars</span>
                   </>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent id='navigation-menu'>
@@ -105,18 +112,24 @@ function SideMenu() {
             isInMenu={true}
           />
           <Button
+            asChild
             variant='ghost'
             className='flex justify-start gap-4'
-            onMouseDown={() => handleAllCarsNavigationOnClick('saved')}
+            onClick={handleLinkClickMenuClose}
           >
-            <Heart /> Saved
+            <Link to='/shopping-cart/saved'>
+              <Heart /> Saved
+            </Link>
           </Button>
           <Button
+            asChild
             variant='ghost'
             className='flex justify-start gap-4'
-            onMouseDown={() => handleAllCarsNavigationOnClick('cart')}
+            onClick={handleLinkClickMenuClose}
           >
-            <ShoppingBag /> Cart
+            <Link to='/shopping-cart/cart'>
+              <ShoppingBag /> Cart
+            </Link>
           </Button>
         </div>
         <SheetFooter className='mt-5'>
