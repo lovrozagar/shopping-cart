@@ -1,9 +1,7 @@
 import 'swiper/css'
-import 'swiper/css/effect-cards'
-import 'swiper/css/autoplay'
 import { Swiper, SwiperSlide } from 'swiper/react'
 // @ts-ignore
-import SwiperCore, { EffectCards, Autoplay } from 'swiper'
+import SwiperCore, { Autoplay } from 'swiper'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useState, useEffect } from 'react'
 
@@ -13,7 +11,7 @@ import lamborghini_yellow from '@/assets/images/lamborghini/lamborghini_yellow.w
 import nevera_blue from '@/assets/images/nevera/nevera_blue.webp'
 import white from '@/assets/images/placeholder/white.webp'
 
-SwiperCore.use([EffectCards, Autoplay])
+// SwiperCore.use([EffectCards, Autoplay])
 
 function ImageSwiper() {
   const [visibleCardOptions, setVisibleCardOptions] = useState('invisible')
@@ -28,21 +26,13 @@ function ImageSwiper() {
   }, [])
 
   return (
-    <Swiper
-      className='max-w-[600px]'
-      slidesPerView={'auto'}
-      effect={'cards'}
-      grabCursor={true}
-      modules={[EffectCards]}
-      loop={true}
-      autoplay={{ delay: 3000, disableOnInteraction: false }}
-    >
+    <Swiper className='h-full w-full'>
       <SwiperSlide>
         <div className='grid'>
           <img
             src={bmw_grey}
             alt='grey BMW'
-            className={`aspect-video w-full rounded-lg object-cover shadow-xl`}
+            className={`aspect-video h-full rounded-lg object-cover shadow-xl`}
           />
         </div>
       </SwiperSlide>
