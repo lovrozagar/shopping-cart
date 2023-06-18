@@ -12,8 +12,9 @@ import {
 import { Button } from '@/components/shadcnUI/button'
 import { Checkbox } from '@/components/shadcnUI/checkbox'
 import { Separator } from '@/components/shadcnUI/separator'
-import { Wrench } from 'lucide-react'
+import { Wrench, Check } from 'lucide-react'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { Badge } from '@/components/shadcnUI/badge'
 
 function Upgrades({
   available,
@@ -21,17 +22,15 @@ function Upgrades({
   setUpgradeCost,
 }: {
   available: boolean
-  upgrades: { option: string; cost: number }[]
+  upgrades: { option: string; cost: number; selected: boolean }[]
   setUpgradeCost: Dispatch<SetStateAction<number>>
 }) {
-  const [upgradeCheckboxes, setUpgradeCheckboxes] = useState(
-    upgrades.map(() => false)
-  )
+  const [upgradeCheckboxes, setUpgradeCheckboxes] = useState([...upgrades])
 
   const handleCheckboxChange = (
     checked: boolean | string,
     index: number,
-    upgrade: { option: string; cost: number }
+    upgrade: { option: string; cost: number; selected: boolean }
   ) => {
     if (checked) {
       setUpgradeCost((prevCost) => prevCost + upgrade.cost)
@@ -40,7 +39,9 @@ function Upgrades({
     }
     setUpgradeCheckboxes((prevCheckboxes) =>
       prevCheckboxes.map((checkbox, chx_index) =>
-        index === chx_index ? !checkbox : checkbox
+        index === chx_index
+          ? { ...checkbox, selected: !checkbox.selected }
+          : checkbox
       )
     )
   }
@@ -48,10 +49,11 @@ function Upgrades({
   return (
     <>
       {available ? (
-        <div className='flex'>
+        <div>
           <Popover>
             <PopoverTrigger asChild>
               <Button
+                size='lg'
                 disabled={available ? false : true}
                 variant='outline'
                 className='flex gap-2'
@@ -70,7 +72,7 @@ function Upgrades({
                   >
                     <Checkbox
                       id={`checkbox-upgrade-${index}`}
-                      checked={upgradeCheckboxes[index]}
+                      checked={upgradeCheckboxes[index].selected}
                       onCheckedChange={(checked) =>
                         handleCheckboxChange(checked, index, upgrade)
                       }
@@ -85,19 +87,15 @@ function Upgrades({
               ))}
             </PopoverContent>
           </Popover>
-          <div className='mx-2 flex w-full items-center justify-start overflow-x-auto pr-2 font-medium italic text-muted-foreground'>
-            {upgradeCheckboxes.map((checkbox, index, array) => (
-              <>
-                <p className='min-w-fit text-sm'>
-                  {checkbox
-                    ? `+ ${upgrades[index].option}${
-                        index !== array.length - 1 ? ',' : ''
-                      } ${' '}`
-                    : null}
-                </p>
-                <span className='pr-1'></span>
-              </>
-            ))}
+          <div className='mt-2 flex w-full flex-wrap items-center justify-start gap-1 pr-2 font-medium text-muted-foreground'>
+            {upgradeCheckboxes
+              .filter((upgrade) => upgrade.selected === true)
+              .map((upgrade) => (
+                <Badge className='flex items-center gap-1'>
+                  {upgrade.option}
+                  <Check size={16} />
+                </Badge>
+              ))}
           </div>
         </div>
       ) : (
