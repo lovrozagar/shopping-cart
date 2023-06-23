@@ -13,37 +13,35 @@ import { Button } from '@/components/shadcnUI/button'
 import { Checkbox } from '@/components/shadcnUI/checkbox'
 import { Separator } from '@/components/shadcnUI/separator'
 import { Wrench, Check } from 'lucide-react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, Fragment, SetStateAction, useState } from 'react'
 import { Badge } from '@/components/shadcnUI/badge'
+import { CarProduct } from '@/types/car-types'
 
 function Upgrades({
   available,
   upgrades,
-  setUpgradeCost,
+  setCar,
 }: {
   available: boolean
   upgrades: { option: string; cost: number; selected: boolean }[]
-  setUpgradeCost: Dispatch<SetStateAction<number>>
+  setCar: Dispatch<SetStateAction<CarProduct | null>>
 }) {
-  const [upgradeCheckboxes, setUpgradeCheckboxes] = useState([...upgrades])
+  const handleCheckboxChange = (checked: boolean, index: number) => {
+    setCar((prevCar) => {
+      if (!prevCar) return null
 
-  const handleCheckboxChange = (
-    checked: boolean | string,
-    index: number,
-    upgrade: { option: string; cost: number; selected: boolean }
-  ) => {
-    if (checked) {
-      setUpgradeCost((prevCost) => prevCost + upgrade.cost)
-    } else {
-      setUpgradeCost((prevCost) => prevCost - upgrade.cost)
-    }
-    setUpgradeCheckboxes((prevCheckboxes) =>
-      prevCheckboxes.map((checkbox, chx_index) =>
-        index === chx_index
-          ? { ...checkbox, selected: !checkbox.selected }
-          : checkbox
-      )
-    )
+      const upgrades = { ...prevCar }.upgrades?.map((upgrade, upgradeIndex) => {
+        if (upgradeIndex === index) return { ...upgrade, selected: checked }
+        return upgrade
+      })
+
+      const upgradesCost =
+        upgrades
+          ?.filter((upgrade) => upgrade.selected === true)
+          .reduce((acc, cur) => acc + cur.cost, 0) || 0
+
+      return { ...prevCar, price: prevCar.basePrice + upgradesCost, upgrades }
+    })
   }
 
   return (
@@ -64,17 +62,16 @@ function Upgrades({
             </PopoverTrigger>
             <PopoverContent className='px-2'>
               {upgrades.map((upgrade, index, array) => (
-                <>
+                <Fragment key={index}>
                   <label
-                    key={index}
                     htmlFor={`checkbox-upgrade-${index}`}
-                    className='flex flex-wrap items-center  gap-3 rounded p-3 hover:bg-secondary'
+                    className='flex flex-wrap items-center gap-3 rounded p-3 hover:bg-secondary'
                   >
                     <Checkbox
                       id={`checkbox-upgrade-${index}`}
-                      checked={upgradeCheckboxes[index].selected}
+                      checked={upgrades[index].selected}
                       onCheckedChange={(checked) =>
-                        handleCheckboxChange(checked, index, upgrade)
+                        handleCheckboxChange(checked as boolean, index)
                       }
                     />
                     <p className='font-medium'>{`${upgrade.option}`}</p>
@@ -83,15 +80,15 @@ function Upgrades({
                   {index !== array.length - 1 ? (
                     <Separator className='my-2' />
                   ) : null}
-                </>
+                </Fragment>
               ))}
             </PopoverContent>
           </Popover>
-          <div className='mt-2 flex w-full flex-wrap items-center justify-start gap-1 pr-2 font-medium text-muted-foreground'>
-            {upgradeCheckboxes
+          <div className='mt-2 flex w-full flex-wrap items-center justify-start gap-2 pr-2 font-medium text-muted-foreground'>
+            {upgrades
               .filter((upgrade) => upgrade.selected === true)
-              .map((upgrade) => (
-                <Badge className='flex items-center gap-1'>
+              .map((upgrade, index) => (
+                <Badge key={index} className='flex items-center gap-1'>
                   {upgrade.option}
                   <Check size={16} />
                 </Badge>
